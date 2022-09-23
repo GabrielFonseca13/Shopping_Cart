@@ -94,7 +94,17 @@ const getAdd = () => {
   }
 };
 
+const clearCart = () => {
+  const cartList = document.querySelector('.cart__items');
+  const btnClear = document.querySelector('.empty-cart');
+  btnClear.addEventListener('click', () => {
+    localStorage.clear();
+    cartList.innerHTML = '';
+  });
+};
+
 window.onload = async () => {
   await getProducts();
   getAdd();
+  clearCart();
  };
