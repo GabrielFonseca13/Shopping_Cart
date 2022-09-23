@@ -76,10 +76,26 @@ const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
+};
+
+const getClick = async (event) => {
+  const product = event.target.parentNode;
+  const productId = product.querySelector('.item_id').innerText;
+  const cartAdd = await fetchItem(productId);
+  const contentCart = document.querySelector('.cart__items');
+  contentCart.appendChild(createCartItemElement(cartAdd));
+};
+
+const getAdd = () => {
+  const btnCart = document.getElementsByClassName('item__add');
+  for (let i = 0; i < btnCart.length; i += 1) {
+    btnCart[i].addEventListener('click', getClick);
+  }
 };
 
 window.onload = async () => {
   await getProducts();
+  getAdd();
  };
