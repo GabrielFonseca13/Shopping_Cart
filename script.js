@@ -50,14 +50,6 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   return section;
 };
 
-const getProducts = async () => {
-  const items = document.querySelector('.items');
-  const buscaProduto = await fetchProducts('computador');
-  buscaProduto.forEach((produto) => {
-    items.appendChild(createProductItemElement(produto));
-  });
-};
-
 /**
  * Função que recupera o ID do produto passado como parâmetro.
  * @param {Element} product - Elemento do produto.
@@ -65,7 +57,7 @@ const getProducts = async () => {
  */
 const getIdFromProductItem = (product) =>
   product.querySelector('span.id').innerText;
-  console.log(getIdFromProductItem);
+console.log(getIdFromProductItem);
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -76,11 +68,32 @@ const getIdFromProductItem = (product) =>
  * @returns {Element} Elemento de um item do carrinho.
  */
 
-const cartStorage = () => localStorage.removeItem('cartItems');
+const clearCartStorage = () => localStorage.removeItem('cartItems');
 
 const cartItemClickListener = (event) => {
   event.target.remove();
-  cartStorage();
+  clearCartStorage();
+};
+
+const loading = () => {
+    const h1 = document.createElement('h1');
+    h1.innerText = 'carregando...';
+  h1.className = 'loading';
+     const container = document.querySelector('.container'); 
+  container.appendChild(h1);
+};
+
+const loadingEnd = async () => {
+  const loadingElement = document.querySelector('.loading');
+  loadingElement.parentNode.removeChild(loadingElement);
+};
+
+const getProducts = async () => {
+  const items = document.querySelector('.items');
+  const buscaProduto = await fetchProducts('computador');
+  buscaProduto.forEach((produto) => {
+    items.appendChild(createProductItemElement(produto));
+  });
 };
 
 const createCartItemElement = ({ id, title, price }) => {
@@ -115,8 +128,9 @@ const clearCart = () => {
 };
 
 window.onload = async () => {
+  loading();
   await getProducts();
+  loadingEnd();
   getAdd();
-  // createCartItemElement();
   clearCart();
 };
