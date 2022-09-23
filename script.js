@@ -1,5 +1,5 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
-// experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
+// experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
 /**
@@ -30,7 +30,7 @@ const createCustomElement = (element, className, innerText) => {
 
 /**
  * Função responsável por criar e retornar o elemento do produto.
- * @param {Object} product - Objeto do produto. 
+ * @param {Object} product - Objeto do produto.
  * @param {string} product.id - ID do produto.
  * @param {string} product.title - Título do produto.
  * @param {string} product.thumbnail - URL da imagem do produto.
@@ -43,7 +43,9 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createCustomElement('span', 'item_id', id));
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(
+    createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'),
+  );
 
   return section;
 };
@@ -54,14 +56,16 @@ const getProducts = async () => {
   buscaProduto.forEach((produto) => {
     items.appendChild(createProductItemElement(produto));
   });
- };
- 
+};
+
 /**
  * Função que recupera o ID do produto passado como parâmetro.
  * @param {Element} product - Elemento do produto.
  * @returns {string} ID do produto.
  */
-const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
+const getIdFromProductItem = (product) =>
+  product.querySelector('span.id').innerText;
+  console.log(getIdFromProductItem);
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -71,22 +75,29 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+
+const cartStorage = () => localStorage.removeItem('cartItems');
+
+const cartItemClickListener = (event) => {
+  event.target.remove();
+  cartStorage();
+};
+
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 };
 
 const getClick = async (event) => {
   const product = event.target.parentNode;
-  const productId = product.querySelector('.item_id').innerText;
+  const productId = product.querySelector('.item_id').innerHTML;
   const cartAdd = await fetchItem(productId);
   const contentCart = document.querySelector('.cart__items');
   contentCart.appendChild(createCartItemElement(cartAdd));
 };
-
 const getAdd = () => {
   const btnCart = document.getElementsByClassName('item__add');
   for (let i = 0; i < btnCart.length; i += 1) {
@@ -106,5 +117,6 @@ const clearCart = () => {
 window.onload = async () => {
   await getProducts();
   getAdd();
+  // createCartItemElement();
   clearCart();
- };
+};
